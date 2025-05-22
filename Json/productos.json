@@ -1,0 +1,34 @@
+[
+    {
+        "id": 1,
+        "nombre": "Martillo de Acero",
+        "precio": 25.99,
+        "stock": 15,
+        "imagen": "martillo.jpg",
+        "categoria": "herramientas-manuales"
+    },
+    {
+        "id": 2,
+        "nombre": "Destornillador Phillips",
+        "precio": 12.50,
+        "stock": 30,
+        "imagen": "destornillador.jpg",
+        "categoria": "herramientas-manuales"
+    },
+    {
+        "id": 3,
+        "nombre": "Guantes de Seguridad",
+        "precio": 8.75,
+        "stock": 45,
+        "imagen": "guantes.jpg",
+        "categoria": "equipos-seguridad"
+    },
+    {
+        "id": 4,
+        "nombre": "Casco de Obra",
+        "precio": 18.20,
+        "stock": 20,
+        "imagen": "casco.jpg",
+        "categoria": "equipos-seguridad"
+    }
+]

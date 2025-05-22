@@ -1,0 +1,50 @@
+body {
+  background-color: #f8f9fa;
+  font-family: Arial, sans-serif;
+}
+
+.logo-img {
+  width: 100px;
+  height: auto;
+}
+
+.form-container {
+  background-color: white;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 40px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+.form-title {
+  text-align: center;
+  font-size: 32px;
+  font-weight: bold;
+  margin-bottom: 30px;
+}
+
+input[type="text"], input[type="password"], input[type="email"] {
+  width: 100%;
+  border: 2px solid black;
+  padding: 10px;
+  margin-bottom: 20px;
+  background-color: white;
+}
+
+.btn-crear {
+  background-color: black;
+  color: white;
+  font-weight: bold;
+  width: 100%;
+  padding: 10px;
+  border: none;
+  margin-top: 20px;
+}
+
+.btn-crear:hover {
+  background-color: #333;
+}
+.w-48 {
+  width: 48%;
+}
