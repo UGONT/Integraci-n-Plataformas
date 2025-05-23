@@ -6,7 +6,10 @@ function guardarCategoria(event, element) {
 
     console.log("JSON preparado:", categoriaJSON);
 
-    // Si quieres enviar el JSON a una API, descomenta esto:
+    // Guardar en localStorage (opcional)
+    localStorage.setItem('categoriaSeleccionada', JSON.stringify(categoriaJSON));
+
+    // Enviar a la API si es necesario
     // fetch('https://tudominio.com/api/categoria', {
     //     method: 'POST',
     //     headers: {
