@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,18 +9,19 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome para íconos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="../css/estilo_productos.css">    
+    <link rel="stylesheet" href="../css/estilo_productos.css">
 </head>
+
 <body>
     <header class="header-custom py-3">
-    <div class="container">
-        <div class="d-flex justify-content-between align-items-center">
-            <!-- Logo + Nombre (izquierda) -->
-            <div class="d-flex align-items-center">
-                <img src="imagenes/FerreMax.png" alt="Logo Ferremax" class="logo-img me-3">
-            </div>
-            
-            <!-- Botón "Hazte socio" (derecha) -->
+        <div class="container">
+            <div class="d-flex justify-content-between align-items-center">
+                <!-- Logo + Nombre (izquierda) -->
+                <div class="d-flex align-items-center">
+                    <img src="imagenes/FerreMax.png" alt="Logo Ferremax" class="logo-img me-3">
+                </div>
+
+                <!-- Botón "Hazte socio" (derecha) -->
                 <a href="tipo_Usuario.html" class="btn btn-success btn-lg">
                     <i class="fas fa-handshake me-2"></i> Hazte socio
                 </a>
@@ -41,7 +43,9 @@
             <div class="row g-4">
                 <!-- Botón 1 -->
                 <div class="col-md-4">
-                    <a href="../Vista_Producto/Herramientas_Manuales.html" class="btn btn-outline-primary btn-categoria w-100" data-id="1" onclick="guardarCategoria(event, this)">
+                    <a href="#" class="btn btn-outline-primary btn-categoria w-100" data-id="1"
+                        onclick="seleccionarCategoria(event, this)">
+
                         <div>
                             <i class="fas fa-hammer fa-2x mb-2"></i>
                             <h5>Herramientas Manuales</h5>
@@ -50,7 +54,8 @@
                 </div>
                 <!-- Botón 2 -->
                 <div class="col-md-4">
-                    <a href="../Vista_Producto/Equipo_de_seguridad.html" class="btn btn-outline-primary btn-categoria w-100" data-id="2" onclick="guardarCategoria(event, this)">
+                    <a href="#" class="btn btn-outline-primary btn-categoria w-100" data-id="2"
+                        onclick="seleccionarCategoria(event, this)">
                         <div>
                             <i class="fas fa-hard-hat fa-2x mb-2"></i>
                             <h5>Equipos de Seguridad</h5>
@@ -59,7 +64,8 @@
                 </div>
                 <!-- Botón 3 -->
                 <div class="col-md-4">
-                    <a href="../Vista_Producto/fijacion.html" class="btn btn-outline-primary btn-categoria w-100" data-id="3" onclick="guardarCategoria(event, this)">
+                    <a href="#" class="btn btn-outline-primary btn-categoria w-100" data-id="3"
+                        onclick="seleccionarCategoria(event, this)">
                         <div>
                             <i class="fas fa-tools fa-2x mb-2"></i>
                             <h5>Fijaciones</h5>
@@ -68,7 +74,8 @@
                 </div>
                 <!-- Botón 4 -->
                 <div class="col-md-4">
-                    <a href="../Vista_Producto/Tornillos_Anclajes.html" class="btn btn-outline-primary btn-categoria w-100" data-id="4" onclick="guardarCategoria(event, this)">
+                    <a href="#" class="btn btn-outline-primary btn-categoria w-100" data-id="4"
+                        onclick="seleccionarCategoria(event, this)">
                         <div>
                             <i class="fas fa-screwdriver fa-2x mb-2"></i>
                             <h5>Tornillos y Anclaje</h5>
@@ -77,7 +84,8 @@
                 </div>
                 <!-- Botón 5 -->
                 <div class="col-md-4">
-                    <a href="../Vista_Producto/Equipo_de_mediacion.html" class="btn btn-outline-primary btn-categoria w-100" data-id="5" onclick="guardarCategoria(event, this)">
+                    <a href="#" class="btn btn-outline-primary btn-categoria w-100" data-id="5"
+                        onclick="seleccionarCategoria(event, this)">
                         <div>
                             <i class="fas fa-ruler-combined fa-2x mb-2"></i>
                             <h5>Equipos de Medición</h5>
@@ -86,7 +94,8 @@
                 </div>
                 <!-- Botón 6 -->
                 <div class="col-md-4">
-                    <a href="../Vista_Producto/Materiales_basicos.html" class="btn btn-outline-primary btn-categoria w-100" data-id="6" onclick="guardarCategoria(event, this)">
+                    <a href="#" class="btn btn-outline-primary btn-categoria w-100" data-id="6"
+                        onclick="seleccionarCategoria(event, this)">
                         <div>
                             <i class="fas fa-boxes fa-2x mb-2"></i>
                             <h5>Materiales Basicos</h5>
@@ -113,4 +122,5 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../Js/productos.js"></script>
 </body>
+
 </html>

@@ -1,20 +1,11 @@
-function guardarCategoria(event, element) {
-    const categoriaId = element.getAttribute('data-id');
-    const categoriaJSON = {
-        categoria_seleccionada: parseInt(categoriaId)
-    };
+function seleccionarCategoria(event, element) {
+    event.preventDefault();
+    const tipo = element.dataset.id;
 
-    console.log("JSON preparado:", categoriaJSON);
+    // Guarda el tipo en localStorage
+    localStorage.setItem("categoriaTipo", tipo);
 
-    // Guardar en localStorage (opcional)
-    localStorage.setItem('categoriaSeleccionada', JSON.stringify(categoriaJSON));
-
-    // Enviar a la API si es necesario
-    // fetch('https://tudominio.com/api/categoria', {
-    //     method: 'POST',
-    //     headers: {
-    //         'Content-Type': 'application/json'
-    //     },
-    //     body: JSON.stringify(categoriaJSON)
-    // });
+    // Redirige a la vista de productos
+    window.location.href = "../Vista_Producto/productos.html";
 }
+
