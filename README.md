@@ -17,5 +17,5 @@ Este proyecto es una tienda web desarrollada con HTML, CSS y JavaScript puro, ut
 - Cognito (autenticación de usuarios)
 - Integración de Transbank Webpay (modo testing)
 
-## 🔧 Estructura del proyecto
+
 
