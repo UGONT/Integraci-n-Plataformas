@@ -56,9 +56,10 @@
         </a>
       </div>
     </div>
-
+    
     <!-- Contenedor de productos -->
     <div id="lista-productos" class="row mt-4">
+      
       <!-- Aquí se cargan los productos dinámicamente -->
     </div>
   </main>
@@ -116,6 +117,7 @@
               <h5 class="card-title">${prod.nombre}</h5>
               <p class="card-text">Precio: $${prod.precio}</p>
               <p class="card-text">Stock: ${prod.stock}</p>
+              <p class="card-img"><img src="/imagenes/Equipo_de_seguridad/casco.jpg" alt="" style="height: 100px; width: 100px;"></p>
               <button class="btn btn-primary mt-auto" onclick='agregarAlCarrito(${JSON.stringify(prod)})'>Agregar al carrito</button>
             </div>
           </div>
