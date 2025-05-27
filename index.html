@@ -10,6 +10,32 @@
     <!-- Font Awesome para íconos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../css/estilo_productos.css">
+    <script src="https://unpkg.com/aws-amplify@4.3.29/dist/aws-amplify.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const Amplify = window.aws_amplify.Amplify;
+            const Auth = window.aws_amplify.Auth;
+
+            Amplify.configure({
+                Auth: {
+                    region: 'us-east-1',
+                    userPoolId: 'us-east-1_FFwSCgX0h',
+                    userPoolWebClientId: '4ff01scgsuehj023mrfqa6r4ls',
+                }
+            });
+
+            Auth.currentAuthenticatedUser()
+                .then(user => {
+                    const socioBtn = document.querySelector('.btn-success.btn-lg');
+                    if (socioBtn) {
+                        socioBtn.innerHTML = '<i class="fas fa-handshake me-2"></i> Hola socio!';
+                    }
+                })
+                .catch(err => {
+                    
+                });
+        });
+    </script>
 </head>
 
 <body>

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,9 +11,134 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- CSS Personalizado -->
     <link rel="stylesheet" href="../css/estilo_principal.css">
+    <script src="https://unpkg.com/aws-amplify@4.3.29/dist/aws-amplify.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const Amplify = window.aws_amplify.Amplify;
+            const Auth = window.aws_amplify.Auth;
+            let usuarioRecienRegistrado = "";
+
+            Amplify.configure({
+                Auth: {
+                    region: 'us-east-1',
+                    userPoolId: 'us-east-1_FFwSCgX0h',
+                    userPoolWebClientId: '4ff01scgsuehj023mrfqa6r4ls',
+                }
+            });
+
+            document.getElementById('form-socio').addEventListener('submit', async function (e) {
+                e.preventDefault();
+                const email = document.getElementById('socio-email').value;
+                const password = document.getElementById('socio-password').value;
+
+                try {
+                    const user = await Auth.signIn(email, password);
+                    alert('Inicio de sesión exitoso. Bienvenido, ' + user.username);
+
+                    window.location.href = 'index.html';
+                } catch (error) {
+                    alert('Error al iniciar sesión: ' + error.message);
+                }
+            });
+
+            document.getElementById('form-admin').addEventListener('submit', async function (e) {
+                e.preventDefault();
+                const email = document.getElementById('admin-email').value;
+                const password = document.getElementById('admin-password').value;
+
+                try {
+                    const user = await Auth.signIn(email, password);
+                    alert('Inicio de sesión administrador exitoso. Bienvenido, ' + user.username);
+                    // window.location.href = 'pagina_admin.html';
+                } catch (error) {
+                    alert('Error al iniciar sesión admin: ' + error.message);
+                }
+            });
+
+            document.getElementById('form-registro').addEventListener('submit', async function (e) {
+                e.preventDefault();
+                const nombre = document.getElementById('reg-nombre').value;
+                const email = document.getElementById('reg-email').value;
+                const password = document.getElementById('reg-password').value;
+
+                try {
+                    const result = await Auth.signUp({
+                        username: email,
+                        password: password,
+                        attributes: {
+                            email: email,
+                            name: nombre
+                        }
+                    });
+                    console.log("Registro exitoso:", result);
+                    alert("Registro exitoso. Por favor revisa tu correo para ingresar el código de verificación.");
+                    usuarioRecienRegistrado = email;
+                    mostrarFormulario('form-confirmar'); // mostrar formulario de código
+                } catch (error) {
+                    console.error("Error al registrarse:", err);
+                    alert(err.message || "Error al registrarse");
+                }
+            });
+            document.getElementById('form-confirmar').addEventListener('submit', async function (e) {
+                e.preventDefault();
+
+                const codigo = document.getElementById('codigo-confirmacion').value;
+
+                try {
+                    await Auth.confirmSignUp(usuarioRecienRegistrado, codigo);
+                    alert("Cuenta confirmada exitosamente. Ahora puedes iniciar sesión.");
+                    window.location.href = "index.html";
+                } catch (err) {
+                    console.error("Error al confirmar código:", err);
+                    alert(err.message || "Error al confirmar código");
+                }
+            });
+            document.getElementById('btn-reenviar-codigo').addEventListener('click', async function () {
+                if (!usuarioRecienRegistrado) {
+                    alert("No se encontró el usuario. Por favor regístrate primero.");
+                    return;
+                }
+
+                try {
+                    await Auth.resendSignUp(usuarioRecienRegistrado);
+                    alert("Se ha reenviado el código de verificación al correo.");
+                } catch (err) {
+                    console.error("Error al reenviar el código:", err);
+                    alert(err.message || "Error al reenviar el código.");
+                }
+            });
+            Auth.currentAuthenticatedUser()
+                .then(user => {
+                    console.log("Usuario autenticado:", user);
+                    document.getElementById("formularios").classList.add("d-none");
+                    document.getElementById("botones").classList.add("d-none");
+                    document.getElementById("bloque1").classList.add("d-none");
+                    document.getElementById("bienvenida-usuario").classList.remove("d-none");
+                    document.getElementById("bloque2").classList.remove("d-none");
+                })
+                .catch(() => {
+                    /* No ta autentificado */
+                    document.getElementById("formularios").classList.remove("d-none");
+                    document.getElementById("botones").classList.remove("d-none");
+                    document.getElementById("bienvenida-usuario").classList.add("d-none");
+                });
+            document.getElementById("btn-logout").addEventListener("click", async () => {
+                try {
+                    await Auth.signOut();
+                    alert("Has cerrado sesión exitosamente.");
+                    location.reload(); 
+                } catch (error) {
+                    console.error("Error al cerrar sesión:", error);
+                    alert("Hubo un problema al cerrar sesión.");
+                }
+            });
+
+        });
+    </script>
 </head>
+
 <body>
-    <!-- Header (igual que en index.html) -->
+    
     <header class="header-custom">
         <div class="container">
             <div class="d-flex justify-content-between align-items-center py-3">
@@ -30,52 +156,144 @@
     <main class="container my-5">
         <div class="row justify-content-center">
             <div class="col-md-8 col-lg-6">
-                <div class="text-center mb-5">
-                    <h1 class="display-5 text-primary">¡Tipo De Usuario!</h1>
-                    <p class="lead">Recuerda ser parte de la familia FerreMax en donde estan los mejores precios y calidad</p>
+
+                <div id="bloque1" class="text-center mb-5">
+                    <h1 class="display-5 text-primary">¡Hola Usuario!</h1>
+                    <p class="lead">Recuerda ser parte de la familia FerreMax en donde estan los mejores precios y
+                        calidad!</p>
                 </div>
 
-                <div class="card shadow-sm border-0">
+                <div id="bloque2" class="text-center mb-5 d-none">
+                    <h1 class="display-5 text-primary">¡Hola bienvenido!</h1>
+                    <p class="lead">Gracias por ser parte de la familia FerreMax en donde estan los mejores precios y
+                        calidad!</p>
+                </div>
+
+                <div class="card shadow-sm border-0 ">
                     <div class="card-body p-4">
                         <!-- Botones de Rol -->
                         <div class="card shadow-sm border-0">
-                        <div class="card-body p-4">
-                            <!-- Botones de Rol como ENLACES -->
-                            <div class="d-flex justify-content-center gap-3 mb-4">
-                                <!-- Botón SOCIO -->
-                                <a href="../Vista_Usuario/IniciarSesion.html" class="btn btn-outline-primary btn-rol">
-                                    <i class="fas fa-user-tie me-2"></i> Socio
-                                </a>
-                                
-                                <!-- Botón ADMINISTRADOR -->
-                                <a href="/Vista_Desarrollador/IniciaDes.html" class="btn btn-outline-secondary btn-rol">
-                                    <i class="fas fa-lock me-2"></i> Administrador
-                                </a>
-                                
-                                <!-- Botón REGISTRAR -->
-                                <a href="../Vista_Usuario/CrearSesion.html" class="btn btn-outline-success btn-rol">
-                                    <i class="fas fa-edit me-2"></i> Registrar
-                                </a>
+                            <div class="card-body p-4">
+                                <!-- Botones de Rol como ENLACES -->
+                                <div id="botones" class="d-flex justify-content-center gap-3 mb-4">
+                                    <!-- Botón SOCIO -->
+                                    <div class="d-flex justify-content-center gap-3 mb-4">
+                                        <button id="btn-socio" class="btn btn-outline-primary btn-rol">
+                                            <i class="fas fa-user-tie me-2"></i> Socio
+                                        </button>
+                                        <button id="btn-admin" class="btn btn-outline-secondary btn-rol">
+                                            <i class="fas fa-lock me-2"></i> Administrador
+                                        </button>
+                                        <button id="btn-registro" class="btn btn-outline-success btn-rol">
+                                            <i class="fas fa-edit me-2"></i> Registrar
+                                        </button>
+                                    </div>
+
+                                </div>
+
+                                <div id="bienvenida-usuario" class="text-center d-none">
+                                    <h3 class="text-success">Aprovecha un 20% de descuento en todos los
+                                        productos!</h3>
+                                    <button id="btn-logout" class="btn btn-danger mt-3">
+                                        <i class="fas fa-sign-out-alt me-2"></i> Cerrar sesión
+                                    </button>
+                                </div>
+
+                                <div id="formularios" class="mt-4">
+                                    <!-- Formulario Socio -->
+                                    <form id="form-socio" class="d-none">
+                                        <h4>Iniciar sesión como Socio</h4>
+                                        <div class="mb-3">
+                                            <label for="socio-email" class="form-label">Correo electrónico</label>
+                                            <input type="email" class="form-control" id="socio-email" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="socio-password" class="form-label">Contraseña</label>
+                                            <input type="password" class="form-control" id="socio-password" required>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">Ingresar</button>
+                                    </form>
+
+                                    <!-- Formulario Administrador -->
+                                    <form id="form-admin" class="d-none">
+                                        <h4>Iniciar sesión como Administrador</h4>
+                                        <div class="mb-3">
+                                            <label for="admin-email" class="form-label">Correo electrónico</label>
+                                            <input type="email" class="form-control" id="admin-email" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="admin-password" class="form-label">Contraseña</label>
+                                            <input type="password" class="form-control" id="admin-password" required>
+                                        </div>
+                                        <button type="submit" class="btn btn-secondary">Ingresar</button>
+                                    </form>
+
+                                    <!-- Formulario Registro -->
+                                    <form id="form-registro" class="d-none">
+                                        <h4>Registrarse como Socio</h4>
+                                        <div class="mb-3">
+                                            <label for="reg-nombre" class="form-label">Nombre</label>
+                                            <input type="text" class="form-control" id="reg-nombre" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="reg-email" class="form-label">Correo electrónico</label>
+                                            <input type="email" class="form-control" id="reg-email" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="reg-password" class="form-label">Contraseña</label>
+                                            <input type="password" class="form-control" id="reg-password" required>
+                                        </div>
+                                        <button type="submit" class="btn btn-success">Registrarse</button>
+                                    </form>
+
+                                    <!-- Formulario Confirmación de Código -->
+                                    <form id="form-confirmar" class="d-none">
+                                        <h4>Confirmar correo</h4>
+                                        <p class="text-muted">Revisa tu correo y escribe el código que te enviamos</p>
+                                        <div class="mb-3">
+                                            <label for="codigo-confirmacion" class="form-label">Código de
+                                                verificación</label>
+                                            <input type="text" class="form-control" id="codigo-confirmacion" required>
+                                        </div>
+                                        <button type="submit" class="btn btn-success">Confirmar</button>
+                                        <button type="button" id="btn-reenviar-codigo" class="btn btn-link">¿No
+                                            recibiste el código? Reenviar</button>
+
+                                    </form>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <!-- Redes Sociales -->
+                        <div class="text-center mt-5">
+                            <p class="text-muted">Síguenos también en nuestras redes sociales</p>
+                            <div class="social-icons">
+                                <a href="#" class="text-primary mx-2"><i class="fab fa-facebook-f fa-2x"></i></a>
+                                <a href="#" class="text-primary mx-2"><i class="fab fa-instagram fa-2x"></i></a>
+                                <a href="#" class="text-primary mx-2"><i class="fab fa-whatsapp fa-2x"></i></a>
                             </div>
                         </div>
                     </div>
-
-                <!-- Redes Sociales -->
-                <div class="text-center mt-5">
-                    <p class="text-muted">Síguenos también en nuestras redes sociales</p>
-                    <div class="social-icons">
-                        <a href="#" class="text-primary mx-2"><i class="fab fa-facebook-f fa-2x"></i></a>
-                        <a href="#" class="text-primary mx-2"><i class="fab fa-instagram fa-2x"></i></a>
-                        <a href="#" class="text-primary mx-2"><i class="fab fa-whatsapp fa-2x"></i></a>
-                    </div>
                 </div>
-            </div>
-        </div>
     </main>
+
+    <script>
+        document.getElementById('btn-socio').addEventListener('click', () => mostrarFormulario('form-socio'));
+        document.getElementById('btn-admin').addEventListener('click', () => mostrarFormulario('form-admin'));
+        document.getElementById('btn-registro').addEventListener('click', () => mostrarFormulario('form-registro'));
+
+        function mostrarFormulario(idMostrar) {
+            ['form-socio', 'form-admin', 'form-registro'].forEach(id => {
+                document.getElementById(id).classList.add('d-none');
+            });
+            document.getElementById(idMostrar).classList.remove('d-none');
+        }
+    </script>
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <!-- JS Personalizado -->
-    <script src="../js/scripts.js"></script>
 </body>
+
 </html>
