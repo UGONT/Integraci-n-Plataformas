@@ -1,108 +1,100 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Pago Exitoso - FerreMax</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <style>
-        body {
-            padding-top: 50px;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pago Exitoso - FerreMax</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <style>
+    body {
+      padding-top: 50px;
+    }
+  </style>
 </head>
-
 <body>
-    <div class="container">
-        <h2 class="text-success">¡Pago realizado con éxito!</h2>
-        <p>Gracias por tu compra. Aquí está el resumen de tu transacción:</p>
+  <div class="container">
+    <h2 class="text-success">¡Pago realizado con éxito!</h2>
+    <p>Gracias por tu compra. Aquí está el resumen de tu transacción:</p>
+    <div id="boleta" class="mt-4"></div>
+    <a href="/index.html" class="btn btn-primary mt-4">Volver a inicio</a>
+  </div>
 
-        <div id="boleta" class="mt-4"></div>
+ <!--  <script>
+    async function procesarPostPago() {
+      const params = new URLSearchParams(window.location.search);
+      const token_ws = params.get("token_ws");
+      const buy_order = params.get("buy_order");
+      const estado = params.get("estado");
+      const monto = params.get("monto");
 
-        <a href="/index.html" class="btn btn-primary mt-4">Volver a inicio</a>
-    </div>
+      if (token_ws) {
+        // Paso 3: Llamar a commitTransaccion
+        try {
+          const response = await fetch("https://21v54ti4n0.execute-api.us-east-1.amazonaws.com/test/commitTransaccion", {
+            method: "POST",
+            headers: { "Content-Type": "application/x-www-form-urlencoded" },
+            body: `token_ws=${token_ws}`
+          });
 
-    <script>
-        // Función para leer el token_ws desde POST (Webpay lo envía como application/x-www-form-urlencoded)
-        async function obtenerTokenDesdePost() {
-            // Solo se puede leer desde POST si hiciste "form.submit()" desde Webpay
-            const formData = new URLSearchParams(window.location.search);
-            const token = "ssssss"/* formData.get("token_ws"); */
-
-            if (!token) {
-                document.getElementById("boleta").innerHTML = "<div class='alert alert-danger'>No se recibió token de transacción.</div>";
-                return;
-            }
-            try {
-                const response = await fetch("https://21v54ti4n0.execute-api.us-east-1.amazonaws.com/test/commitTransaccion", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ token_ws: token })
-                });
-
-                const data = await response.json();
-
-                if (data.redirect_url) {
-                    // Redirigir al URL entregado por la Lambda
-                    window.location.href = data.redirect_url;
-                } else if (data.estado === "autorizado") {
-                    // Si no se entregó URL pero la transacción fue exitosa
-                    mostrarBoleta(data);
-                } else {
-                    document.getElementById("boleta").innerHTML = "<div class='alert alert-warning'>La transacción no fue autorizada.</div>";
-                }
-            } catch (err) {
-                console.error(err);
-                document.getElementById("boleta").innerHTML = "<div class='alert alert-danger'>Error al confirmar la transacción.</div>";
-            }
-
-            /* try {
-                const response = await fetch("https://21v54ti4n0.execute-api.us-east-1.amazonaws.com/test/commitTransaccion", {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ token_ws: token })
-                });
-
-                const data = await response.json();
-
-                if (data.estado === "autorizado") {
-                    mostrarBoleta(data);
-                } else {
-                    document.getElementById("boleta").innerHTML = "<div class='alert alert-warning'>La transacción no fue autorizada.</div>";
-                }
-            } catch (err) {
-                console.error(err);
-                document.getElementById("boleta").innerHTML = "<div class='alert alert-danger'>Error al confirmar la transacción.</div>";
-            } */
+          if (response.redirected) {
+            // Redirige automáticamente con buy_order, estado y monto
+            window.location.href = response.url;
+          } else {
+            throw new Error("Redirección fallida");
+          }
+        } catch (err) {
+          console.error(err);
+          document.getElementById("boleta").innerHTML = "<div class='alert alert-danger'>Error al confirmar la transacción.</div>";
         }
 
-        function mostrarBoleta(data) {
-            console.log("Datos recibidos:", data);
-            console.log("Productos:", data.productos);
-            const boleta = `
-        <div class="card">
-          <div class="card-body">
-            <h5 class="card-title">Boleta #${data.buy_order}</h5>
-            <p><strong>Total Pagado:</strong> $${data.monto}</p>
-            <p><strong>Descuento aplicado:</strong> ${data.descuento_aplicado ? "Sí (20%)" : "No"}</p>
-            <h6>Productos:</h6>
-            <ul class="list-group">
-              ${data.productos.map(p => `
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                  ${p.nombre} (x${p.cantidad})
-                  <span>$${p.precio * p.cantidad}</span>
-                </li>
-              `).join("")}
-            </ul>
-          </div>
-        </div>
-      `;
-            document.getElementById("boleta").innerHTML = boleta;
+      } else if (buy_order && estado && monto) {
+        // Paso 4: Consultar datos de la orden y mostrar boleta
+        try {
+          const response = await fetch("https://21v54ti4n0.execute-api.us-east-1.amazonaws.com/test/consultarOrden", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ buy_order })
+          });
+
+          const data = await response.json();
+
+          if (!data || !data.productos) {
+            throw new Error("No se encontró la orden");
+          }
+
+          const boletaHTML = `
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title">Boleta #${buy_order}</h5>
+                <p><strong>Estado:</strong> ${estado}</p>
+                <p><strong>Total Pagado:</strong> $${monto}</p>
+                <p><strong>Descuento aplicado:</strong> ${data.descuento_aplicado ? "Sí (20%)" : "No"}</p>
+                <h6>Productos:</h6>
+                <ul class="list-group">
+                  ${data.productos.map(p => `
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                      ${p.nombre} (x${p.cantidad})
+                      <span>$${p.precio * p.cantidad}</span>
+                    </li>
+                  `).join("")}
+                </ul>
+              </div>
+            </div>
+          `;
+          document.getElementById("boleta").innerHTML = boletaHTML;
+
+        } catch (err) {
+          console.error(err);
+          document.getElementById("boleta").innerHTML = "<div class='alert alert-danger'>Error al obtener detalles de la orden.</div>";
         }
 
-        document.addEventListener("DOMContentLoaded", obtenerTokenDesdePost);
-    </script>
+      } else {
+        // Ningún parámetro recibido
+        document.getElementById("boleta").innerHTML = "<div class='alert alert-danger'>No se recibió información de la transacción.</div>";
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", procesarPostPago);
+  </script> -->
 </body>
-
 </html>
