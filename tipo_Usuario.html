@@ -74,7 +74,7 @@
                     alert("Registro exitoso. Por favor revisa tu correo para ingresar el código de verificación.");
                     usuarioRecienRegistrado = email;
                     mostrarFormulario('form-confirmar'); // mostrar formulario de código
-                } catch (error) {
+                } catch (err) {
                     console.error("Error al registrarse:", err);
                     alert(err.message || "Error al registrarse");
                 }
